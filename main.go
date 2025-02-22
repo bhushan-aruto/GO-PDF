@@ -8,8 +8,13 @@ import (
 	"github.com/signintech/gopdf"
 )
 
-const PAGE_WIDTH float64 = 21.0
-const PAGE_HEIGHT float64 = 29.7
+const (
+	PAGE_WIDTH  float64 = 21.0
+	PAGE_HEIGHT float64 = 29.7
+	CELL_WIDTH  float64 = 4.0
+	FONT_SIZE   int     = 10
+	LINE_HEIGHT float64 = 0.6
+)
 
 func OuterBorderSection(pdf *gopdf.GoPdf) {
 	pdf.SetStrokeColor(0, 0, 0)
@@ -38,12 +43,6 @@ func findMainHeaderCordinates2(pdf *gopdf.GoPdf, spacing float64, text string) (
 
 	return ((PAGE_WIDTH / 2) - 3.05) - (textWidth / 2), pdf.GetY() + spacing, nil
 }
-
-// func logo(pdf *gopdf.GoPdf) {
-// 	if err := pdf.Image("./logo.png", 1.3, 1.5, &gopdf.Rect{W: 3.5, H: 3}); err != nil {
-// 		log.Printf("error %v", err)
-// 	}
-// }
 
 func AddResizedImage(pdf *gopdf.GoPdf, imgPath string, x, y, maxW, maxH float64) {
 
@@ -142,6 +141,31 @@ func GeneratePdf() {
 		DisplayDate(&pdf)
 
 		createTableForStudents(&pdf)
+
+		var students = []struct {
+			SrNo   string
+			USN    string
+			Name   string
+			Login  string
+			Logout string
+		}{
+			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+			{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+			{"3", "4AL21EC053", "Alexander Christopher Johnson", "10:15 AM", "02:00 PM"},
+			{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+			{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+			{"4", "4AL21EC053", "Aqwertyuiop[asdfghjkl;'zxcvbnmsdfghjklwertyuiozxcvbnmdfghjkghjwertyuiybedfrgthyjukifghghuikol]", "10:15 AM", "02:00 PM"},
+			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+			{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+			{"3", "4AL21EC053", "Alexander Christopher Johnson", "10:15 AM", "02:00 PM"},
+			{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+		}
+		createStudentRow(&pdf, students)
 
 	})
 
@@ -278,10 +302,114 @@ func createTableForStudents(pdf *gopdf.GoPdf) {
 	textX = (PAGE_WIDTH / 2) + 6.65
 	pdf.SetXY(textX, textY)
 	pdf.Text("LOGOUT")
+}
 
+func createStudentRow(pdf *gopdf.GoPdf, students []struct {
+	SrNo   string
+	USN    string
+	Name   string
+	Login  string
+	Logout string
+}) {
+	startY := pdf.GetY() + 0.4
+
+	for _, student := range students {
+
+		nameLines := splitText(student.Name, 27)
+		lineCount := len(nameLines)
+
+		rowHeight := 1.0 + (float64(lineCount-1) * 0.5)
+
+		if err := pdf.SetFont("light-font", "", 12); err != nil {
+			log.Fatal(err)
+		}
+
+		if rowHeight == 1 {
+			pdf.SetXY(1.6, startY+0.6)
+			pdf.Text(student.SrNo)
+		} else if rowHeight == 1.5 {
+			pdf.SetXY(1.6, startY+0.8)
+			pdf.Text(student.SrNo)
+		} else if rowHeight == 2 {
+			pdf.SetXY(1.6, startY+1.1)
+			pdf.Text(student.SrNo)
+		} else {
+			pdf.SetXY(1.6, startY+1.3)
+			pdf.Text(student.SrNo)
+		}
+
+		if rowHeight == 1 {
+			pdf.SetXY(3.2, startY+0.6)
+			pdf.Text(student.USN)
+		} else if rowHeight == 1.5 {
+			pdf.SetXY(3.2, startY+0.8)
+			pdf.Text(student.USN)
+		} else if rowHeight == 2 {
+			pdf.SetXY(3.2, startY+1.1)
+			pdf.Text(student.USN)
+		} else {
+			pdf.SetXY(3.2, startY+1.3)
+			pdf.Text(student.USN)
+		}
+
+		nameStartY := startY + 0.6
+		for i, line := range nameLines {
+			pdf.SetXY(6.7, nameStartY+(float64(i)*0.5))
+			pdf.Text(line)
+		}
+
+		if rowHeight == 1 {
+			pdf.SetXY(13.4, startY+0.6)
+			pdf.Text(student.Login)
+		} else if rowHeight == 1.5 {
+			pdf.SetXY(13.4, startY+0.8)
+			pdf.Text(student.Login)
+		} else if rowHeight == 2 {
+			pdf.SetXY(13.4, startY+1.1)
+			pdf.Text(student.Login)
+		} else {
+			pdf.SetXY(13.4, startY+1.3)
+			pdf.Text(student.Login)
+
+		}
+
+		if rowHeight == 1 {
+			pdf.SetXY(17.2, startY+0.6)
+			pdf.Text(student.Logout)
+		} else if rowHeight == 1.5 {
+			pdf.SetXY(17.2, startY+0.9)
+			pdf.Text(student.Logout)
+		} else if rowHeight == 2 {
+			pdf.SetXY(17.2, startY+1.1)
+			pdf.Text(student.Logout)
+		} else {
+			pdf.SetXY(17.2, startY+1.3)
+			pdf.Text(student.Logout)
+
+		}
+
+		pdf.SetStrokeColor(0, 0, 0)
+		pdf.SetLineWidth(0.05)
+		pdf.Line(1, startY+rowHeight, 20, startY+rowHeight)
+
+		startY += rowHeight
+	}
+}
+
+func splitText(text string, maxLen int) []string {
+	var lines []string
+	for len(text) > maxLen {
+		lines = append(lines, text[:maxLen])
+		text = text[maxLen:]
+	}
+	if len(text) > 0 {
+		lines = append(lines, text)
+	}
+	return lines
 }
 
 func main() {
 
 	GeneratePdf()
+
 }
