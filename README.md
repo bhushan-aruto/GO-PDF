@@ -29,32 +29,34 @@ Ensure you have the following installed:
 ```sh
 go get github.com/signintech/gopdf
 
+
+
 ## ⚙️ Configuration  
-----------------
+-------------------->
 
 📌 Modify the **Students array** in the code to include your own **USN, Name, Login, and Logout details**.
 
 ---
 
 ## 📜 Example Output 📑  
---------------------
+---------------------->
 
 🎯 The generated PDF will contain a **structured attendance table** in the following format:
 
-| 🔢 Sr No | 🎓 USN | 🏷️ Name | ⏰ Login | ⏳ Logout |
-| --- | --- | --- | --- | --- |
-| 1️⃣ | 4AL21EC053 | **John Doe** | 08:30 AM | 12:30 PM |
-| 2️⃣ | 4AL21EC054 | **Michael Smith** | 09:00 AM | 01:00 PM |
+|  Sr. No. | 🎓 USN     |     🏷️ Name       |   ⏰ Login    | ⏳ Logout   |
+|    --    |    ---     |         ---       |      ---      |       ---   |
+|    1️⃣    | 4AL21EC053 | **John Doe**      |   08:30 AM    |   12:30 PM  |
+|    2️⃣    | 4AL21EC054 | **Michael Smith** |   09:00 AM    |   01:00 PM  |
 
 ---
 
 ## ⚠️ Notes 📝  
------------
+-------------->
 
 ⚡ **Long names may get truncated** in the PDF, adjust formatting if needed  
 ⚡ Ensure **gopdf** is installed before running the script
 
----
+------>
 
 
 🚀 **Happy coding!** 🚀
