@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"log"
 	"os"
@@ -9,12 +10,96 @@ import (
 )
 
 const (
-	PAGE_WIDTH  float64 = 21.0
-	PAGE_HEIGHT float64 = 29.7
-	CELL_WIDTH  float64 = 4.0
-	FONT_SIZE   int     = 10
-	LINE_HEIGHT float64 = 0.6
+	PAGE_WIDTH    float64 = 21.0
+	PAGE_HEIGHT   float64 = 29.7
+	CELL_WIDTH    float64 = 4.0
+	FONT_SIZE     int     = 10
+	LINE_HEIGHT   float64 = 0.6
+	MARGIN_BOTTOM float64 = 1.0
+
+	MARGIN_TOP float64 = 1.0
 )
+
+var Students = []struct {
+	SrNo   string
+	USN    string
+	Name   string
+	Login  string
+	Logout string
+}{
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
+	{"3", "4AL21EC053", "zwexdcrtfvgybhunijmko,lp.ctfvgybhunjkm", "10:15 AM", "02:00 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
+	{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrbjjjjjjjjjjjjjoooyyy", "10:15 AM", "02:00 PM"},
+}
 
 func OuterBorderSection(pdf *gopdf.GoPdf) {
 	pdf.SetStrokeColor(0, 0, 0)
@@ -138,45 +223,15 @@ func GeneratePdf() {
 		pdf.Line(1.9, 4, 19.1, 4)
 
 		AddResizedImage(&pdf, "./finallogo.png", 1.4, 1.5, 3.1, 3.1)
-		DisplayDate(&pdf)
-
-		createTableForStudents(&pdf)
-
-		var students = []struct {
-			SrNo   string
-			USN    string
-			Name   string
-			Login  string
-			Logout string
-		}{
-			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
-			{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
-			{"3", "4AL21EC053", "Alexander Christopher Johnson", "10:15 AM", "02:00 PM"},
-			{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
-			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
-			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
-			{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
-			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
-			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
-			{"4", "4AL21EC053", "Aqwertyuiop[asdfghjkl;'zxcvbnmsdfghjklwertyuiozxcvbnmdfghjkghjwertyuiybedfrgthyjukifghghuikol]", "10:15 AM", "02:00 PM"},
-			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
-			{"2", "4AL21EC053", "Michael Smith", "09:00 AM", "01:00 PM"},
-			{"3", "4AL21EC053", "Alexander Christopher Johnson", "10:15 AM", "02:00 PM"},
-			{"4", "4AL21EC053", "AlexandertfygijoefnobfyuagHQRIJWEIUAHQJOChrboooyyy", "10:15 AM", "02:00 PM"},
-			{"1", "4AL21EC053", "John Doe", "08:30 AM", "12:30 PM"},
-		}
-		createStudentRow(&pdf, students)
 
 	})
 
-	pdf.AddPage()
+	GenerateStudentReport(&pdf, Students)
 
 	err := pdf.WritePdf("output.pdf")
 	if err != nil {
 		log.Fatal("Failed to generate PDF:", err)
 	}
-
-	log.Println("PDF generated successfully: output.pdf")
 
 }
 
@@ -189,7 +244,9 @@ func DisplayDate(pdf *gopdf.GoPdf) {
 	machineId := "VS242S45_"
 	slotStatus := "morning"
 
-	x, y := 1.8, pdf.GetY()+1
+	// x, y := 1.8, pdf.GetY()+1
+	x, y := 1.8, 4.552777777777778
+	fmt.Println(y)
 	textX := x + 0.15
 	textY := y + 0.6
 	pdf.SetXY(textX, textY)
@@ -241,159 +298,175 @@ func DisplayDate(pdf *gopdf.GoPdf) {
 
 }
 
-func createTableForStudents(pdf *gopdf.GoPdf) {
+func createTableForStudentsfirst(pdf *gopdf.GoPdf, isfirstPage bool) {
 
 	if err := pdf.SetFont("bold-font", "", 14); err != nil {
 		log.Fatal(err)
 	}
-	x, y := 1.0, pdf.GetY()+0.7
 
-	pdf.SetStrokeColor(0, 0, 0)
-	pdf.SetLineWidth(0.05)
-	pdf.Line(1, 7, 20, 7)
+	if isfirstPage {
+		x, y := 1.0, pdf.GetY()+0.7
 
-	pdf.SetStrokeColor(0, 0, 0)
-	pdf.SetLineWidth(0.05)
-	pdf.Line(1, 8, 20, 8)
+		pdf.SetStrokeColor(0, 0, 0)
+		pdf.SetLineWidth(0.05)
+		pdf.Line(1, 7, 20, 7)
 
-	lineX := x + 1.6
-	lineY := y + 0.05
+		pdf.SetStrokeColor(0, 0, 0)
+		pdf.SetLineWidth(0.05)
+		pdf.Line(1, 8, 20, 8)
 
-	pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
+		lineX := x + 1.6
+		lineY := y + 0.05
 
-	//first text
-	textX := x + 0.15
-	textY := y + 0.7
-	pdf.SetXY(textX, textY)
-	pdf.Text("Sr.No.")
+		pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
 
-	//second text
-	textX = textX + 2.75
-	pdf.SetXY(textX, textY)
-	pdf.Text("USN")
+		//first text
+		textX := x + 0.15
+		textY := y + 0.7
+		pdf.SetXY(textX, textY)
+		pdf.Text("Sr.No.")
 
-	//second line
-	lineX = (PAGE_WIDTH/2)/2 + 1
-	lineY = y + 0.05
+		//second text
+		textX = textX + 2.75
+		pdf.SetXY(textX, textY)
+		pdf.Text("USN")
 
-	pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
+		//second line
+		lineX = (PAGE_WIDTH/2)/2 + 1
+		lineY = y + 0.05
 
-	//third line
-	lineX = PAGE_WIDTH/2 + 2
-	lineY = y + 0.05
+		pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
 
-	pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
+		//third line
+		lineX = PAGE_WIDTH/2 + 2
+		lineY = y + 0.05
 
-	//third text
-	textX = textX + 4.7
-	pdf.SetXY(textX, textY)
-	pdf.Text("NAME")
+		pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
 
-	//fourth line
-	lineX = (PAGE_WIDTH / 2) + 5.65
+		//third text
+		textX = textX + 4.7
+		pdf.SetXY(textX, textY)
+		pdf.Text("NAME")
 
-	pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
+		//fourth line
+		lineX = (PAGE_WIDTH / 2) + 5.65
 
-	// //fourth text
-	textX = (PAGE_WIDTH / 2) + 3.15
-	pdf.SetXY(textX, textY)
-	pdf.Text("LOGIN")
+		pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
 
-	textX = (PAGE_WIDTH / 2) + 6.65
-	pdf.SetXY(textX, textY)
-	pdf.Text("LOGOUT")
+		// //fourth text
+		textX = (PAGE_WIDTH / 2) + 3.15
+		pdf.SetXY(textX, textY)
+		pdf.Text("LOGIN")
+
+		textX = (PAGE_WIDTH / 2) + 6.65
+		pdf.SetXY(textX, textY)
+		pdf.Text("LOGOUT")
+
+	} else {
+		x, y := 1.0, 4.7
+
+		pdf.SetStrokeColor(0, 0, 0)
+		pdf.SetLineWidth(0.05)
+		pdf.Line(1, 4.7, 20, 4.7)
+
+		pdf.SetStrokeColor(0, 0, 0)
+		pdf.SetLineWidth(0.05)
+		pdf.Line(1, 5.7, 20, 5.7)
+
+		lineX := x + 1.6
+		lineY := y + 0.05
+
+		pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
+
+		//first text
+		textX := x + 0.15
+		textY := y + 0.7
+		pdf.SetXY(textX, textY)
+		pdf.Text("Sr.No.")
+
+		//second text
+		textX = textX + 2.75
+		pdf.SetXY(textX, textY)
+		pdf.Text("USN")
+
+		//second line
+		lineX = (PAGE_WIDTH/2)/2 + 1
+		lineY = y + 0.05
+
+		pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
+
+		//third line
+		lineX = PAGE_WIDTH/2 + 2
+		lineY = y + 0.05
+
+		pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
+
+		//third text
+		textX = textX + 4.7
+		pdf.SetXY(textX, textY)
+		pdf.Text("NAME")
+
+		//fourth line
+		lineX = (PAGE_WIDTH / 2) + 5.65
+
+		pdf.Line(lineX, lineY, lineX, PAGE_HEIGHT-1)
+
+		// //fourth text
+		textX = (PAGE_WIDTH / 2) + 3.15
+		pdf.SetXY(textX, textY)
+		pdf.Text("LOGIN")
+
+		textX = (PAGE_WIDTH / 2) + 6.65
+		pdf.SetXY(textX, textY)
+		pdf.Text("LOGOUT")
+
+	}
+
 }
 
-func createStudentRow(pdf *gopdf.GoPdf, students []struct {
+func createStudentRow(pdf *gopdf.GoPdf, student struct {
 	SrNo   string
 	USN    string
 	Name   string
 	Login  string
 	Logout string
-}) {
-	startY := pdf.GetY() + 0.4
+}, startY float64) float64 {
 
-	for _, student := range students {
+	nameLines := splitText(student.Name, 27)
+	lineCount := len(nameLines)
+	rowHeight := 1.0 + (float64(lineCount-1) * 0.5)
 
-		nameLines := splitText(student.Name, 27)
-		lineCount := len(nameLines)
-
-		rowHeight := 1.0 + (float64(lineCount-1) * 0.5)
-
-		if err := pdf.SetFont("light-font", "", 12); err != nil {
-			log.Fatal(err)
-		}
-
-		if rowHeight == 1 {
-			pdf.SetXY(1.6, startY+0.6)
-			pdf.Text(student.SrNo)
-		} else if rowHeight == 1.5 {
-			pdf.SetXY(1.6, startY+0.8)
-			pdf.Text(student.SrNo)
-		} else if rowHeight == 2 {
-			pdf.SetXY(1.6, startY+1.1)
-			pdf.Text(student.SrNo)
-		} else {
-			pdf.SetXY(1.6, startY+1.3)
-			pdf.Text(student.SrNo)
-		}
-
-		if rowHeight == 1 {
-			pdf.SetXY(3.2, startY+0.6)
-			pdf.Text(student.USN)
-		} else if rowHeight == 1.5 {
-			pdf.SetXY(3.2, startY+0.8)
-			pdf.Text(student.USN)
-		} else if rowHeight == 2 {
-			pdf.SetXY(3.2, startY+1.1)
-			pdf.Text(student.USN)
-		} else {
-			pdf.SetXY(3.2, startY+1.3)
-			pdf.Text(student.USN)
-		}
-
-		nameStartY := startY + 0.6
-		for i, line := range nameLines {
-			pdf.SetXY(6.7, nameStartY+(float64(i)*0.5))
-			pdf.Text(line)
-		}
-
-		if rowHeight == 1 {
-			pdf.SetXY(13.4, startY+0.6)
-			pdf.Text(student.Login)
-		} else if rowHeight == 1.5 {
-			pdf.SetXY(13.4, startY+0.8)
-			pdf.Text(student.Login)
-		} else if rowHeight == 2 {
-			pdf.SetXY(13.4, startY+1.1)
-			pdf.Text(student.Login)
-		} else {
-			pdf.SetXY(13.4, startY+1.3)
-			pdf.Text(student.Login)
-
-		}
-
-		if rowHeight == 1 {
-			pdf.SetXY(17.2, startY+0.6)
-			pdf.Text(student.Logout)
-		} else if rowHeight == 1.5 {
-			pdf.SetXY(17.2, startY+0.9)
-			pdf.Text(student.Logout)
-		} else if rowHeight == 2 {
-			pdf.SetXY(17.2, startY+1.1)
-			pdf.Text(student.Logout)
-		} else {
-			pdf.SetXY(17.2, startY+1.3)
-			pdf.Text(student.Logout)
-
-		}
-
-		pdf.SetStrokeColor(0, 0, 0)
-		pdf.SetLineWidth(0.05)
-		pdf.Line(1, startY+rowHeight, 20, startY+rowHeight)
-
-		startY += rowHeight
+	if err := pdf.SetFont("light-font", "", 12); err != nil {
+		log.Fatal(err)
 	}
+
+	calculateY := func(baseY float64) float64 {
+		return startY + (rowHeight-1)*0.3 + baseY
+	}
+
+	pdf.SetXY(1.6, calculateY(0.6))
+	pdf.Text(student.SrNo)
+
+	pdf.SetXY(3.2, calculateY(0.6))
+	pdf.Text(student.USN)
+
+	nameStartY := startY + 0.6
+	for i, line := range nameLines {
+		pdf.SetXY(6.7, nameStartY+(float64(i)*0.5))
+		pdf.Text(line)
+	}
+
+	pdf.SetXY(13.4, calculateY(0.6))
+	pdf.Text(student.Login)
+
+	pdf.SetXY(17.2, calculateY(0.6))
+	pdf.Text(student.Logout)
+
+	pdf.SetStrokeColor(0, 0, 0)
+	pdf.SetLineWidth(0.05)
+	pdf.Line(1, startY+rowHeight, 20, startY+rowHeight)
+
+	return startY + rowHeight
 }
 
 func splitText(text string, maxLen int) []string {
@@ -408,8 +481,36 @@ func splitText(text string, maxLen int) []string {
 	return lines
 }
 
-func main() {
+func GenerateStudentReport(pdf *gopdf.GoPdf, students []struct {
+	SrNo   string
+	USN    string
+	Name   string
+	Login  string
+	Logout string
+}) {
+	pdf.AddPage()
+	DisplayDate(pdf)
+	createTableForStudentsfirst(pdf, true)
 
+	startY := pdf.GetY() + 0.4
+
+	for i := 0; i < len(students); i++ {
+		student := students[i]
+
+		rowHeight := 1.0 + (float64(len(splitText(student.Name, 27))-1) * 0.5)
+
+		if startY+rowHeight > PAGE_HEIGHT-MARGIN_BOTTOM {
+			pdf.AddPage()
+			startY = 5.7
+			createTableForStudentsfirst(pdf, false)
+		}
+
+		startY = createStudentRow(pdf, student, startY)
+
+	}
+}
+
+func main() {
 	GeneratePdf()
 
 }
